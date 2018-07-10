@@ -12,7 +12,7 @@ module Controllers
       end
     end
 
-    get '/messages' do
+    post '/messages' do
       session = check_session 'messages'
       check_presence 'message', 'receiver'
       Services::Websockets.send_to_user(receiver, params['message'], params['data'] || {})
