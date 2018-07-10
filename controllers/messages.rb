@@ -1,6 +1,6 @@
 module Controllers
   class Messages < Arkan::Utils::Controller
-    declare_route('post', '/') do
+    declare_route 'post', '/' do
       session = check_session 'messages'
       check_presence 'message', 'receiver'
       Services::Websockets.send_to_user(receiver, params['message'], params['data'] || {})
