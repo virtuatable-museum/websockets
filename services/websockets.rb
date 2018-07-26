@@ -25,7 +25,9 @@ module Services
     # @param message [String] the type of message you want to send.
     # @param data [Hash] a JSON-compatible hash to send as a JSON string with the message type.
     def send_message(session_id, message, data)
-      if !sockets[session_id].nil? sockets[session_id].send({message: message, data: data}.to_json)
+      if !sockets[session_id].nil?
+        sockets[session_id].send({message: message, data: data}.to_json)
+      end
     end
 
     # Broadcasts a message to each and every currently connected users.
