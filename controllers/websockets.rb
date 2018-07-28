@@ -2,7 +2,7 @@ module Controllers
   # Controller handling the websockets, creating it and receiving the commands for it.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Websockets < Arkaan::Utils::Controller
-    post '/' do
+    declare_route 'post', '/' do
       session = check_session 'messages'
       if !request.websocket?
         custom_error 400, 'creation.websocket.invalid_type'
