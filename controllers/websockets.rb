@@ -4,7 +4,6 @@ module Controllers
   class Websockets < Arkaan::Utils::ControllerWithoutFilter
     declare_route 'get', '/' do
       session = check_session 'messages'
-      application = check_application 'messages'
       
       if !request.websocket?
         custom_error 400, 'creation.websocket.invalid_type'
