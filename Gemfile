@@ -5,7 +5,7 @@ group :development, :production, :test do
   gem 'sinatra'          , '2.0.1'     , require: 'sinatra/base'
   gem 'sinatra-websocket', '0.3.1'
   gem 'mongoid'          , '7.0.0.beta'
-  gem 'arkaan'           , '0.10.2'
+  gem 'arkaan'           , '0.10.5'
   gem 'draper'           , '3.0.1'
 end
 
