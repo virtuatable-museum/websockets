@@ -33,7 +33,7 @@ module Services
     # Broadcasts a message to each and every currently connected users.
     # @param message [String] the type of message you want to broadcast to every user.
     # @param data [Hash] the additional data you want to send with the broadcasted command.
-    def broadcast_message(message, data)
+    def broadcast(message, data)
       sockets.each_key { |session_id| send_message(session_id, message, data) }
     end
 
