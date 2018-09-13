@@ -23,7 +23,7 @@ module Controllers
       halt 200, {message: 'transmitted'}.to_json
     end
 
-    declare_route 'post', 'broadcast' do
+    declare_route 'post', '/broadcast' do
       check_presence 'message', route: 'messages'
 
       EM.next_tick do
