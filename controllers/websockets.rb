@@ -2,6 +2,9 @@ module Controllers
   # Controller handling the websockets, creating it and receiving the commands for it.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Websockets < Arkaan::Utils::ControllerWithoutFilter
+
+    load_errors_from __FILE__
+    
     declare_route 'get', '/' do
       session = check_session 'messages'
       
@@ -15,6 +18,7 @@ module Controllers
     end
 
     declare_route 'post', '/messages' do
+      before_checks
       check_presence 'message', 'receiver', route: 'messages'
 
       EM.next_tick do
@@ -24,6 +28,7 @@ module Controllers
     end
 
     declare_route 'post', '/broadcast' do
+      before_checks
       check_presence 'message', route: 'messages'
 
       EM.next_tick do
