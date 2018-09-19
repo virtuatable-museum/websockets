@@ -1,10 +1,17 @@
+require 'sinatra/custom_logger'
+
 module Controllers
   # Controller handling the websockets, creating it and receiving the commands for it.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Websockets < Arkaan::Utils::ControllerWithoutFilter
+    helpers Sinatra::CustomLogger
 
     load_errors_from __FILE__
-    
+
+    configure do
+      set :logger, Logger.new(STDOUT)
+    end
+
     declare_route 'get', '/' do
       session = check_session 'messages'
       
@@ -20,6 +27,8 @@ module Controllers
     declare_route 'post', '/messages' do
       before_checks
       check_presence 'message', 'receiver', route: 'messages'
+
+      logger.info "Sending a [#{params['message']}] message to : #{params['receiver']}"
 
       EM.next_tick do
         Services::Websockets.instance.send_to_user(params['receiver'], params['message'], params['data'] || {})
