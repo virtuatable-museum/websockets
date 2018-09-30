@@ -8,6 +8,8 @@ errors:
       required: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-given'
       unknown: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-found'
   messages:
+    any_id:
+      required: ''
     message:
       require: ''
     receiver:

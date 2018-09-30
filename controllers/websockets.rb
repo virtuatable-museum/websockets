@@ -26,9 +26,10 @@ module Controllers
 
     declare_route 'post', '/messages' do
       before_checks
-      check_presence 'message', 'receiver', route: 'messages'
-
-      logger.info "Sending a [#{params['message']}] message to : #{params['receiver']}"
+      # The message have to be sent, even if the additional data are optional.
+      check_presence 'message', route: 'messages'
+      # A message can be sent to either : one user, several users, and all the users of a single campaign.
+      check_either_presence 'account_id', 'campaign_id', 'account_ids', route: 'messages', key: 'any_id'
 
       EM.next_tick do
         Services::Websockets.instance.send_to_user(params['receiver'], params['message'], params['data'] || {})
