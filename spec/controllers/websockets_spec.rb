@@ -12,9 +12,7 @@ describe Controllers::Websockets do
   end
 
   describe 'POST /messages' do
-    describe 'Nominal case' do
 
-    end
     describe '400 errors' do
       describe 'when the message is not given' do
         before do
@@ -66,15 +64,52 @@ describe Controllers::Websockets do
         end
       end
     end
+
     describe '404 errors' do
       describe 'account not found' do
-
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test_message', account_id: 'test_id'}
+        end
+        it 'Returns a Not Found (404) status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'account_id',
+            error: 'unknown'
+          })
+        end
       end
       describe 'either account not found' do
-
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test_message', account_ids: ['test_id', 'other_id']}
+        end
+        it 'Returns a Not Found (404) status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'account_id',
+            error: 'unknown'
+          })
+        end
       end
       describe 'campaign not found' do
-
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test_message', campaign_id: 'test_id'}
+        end
+        it 'Returns a Not Found (404) status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'campaign_id',
+            error: 'unknown'
+          })
+        end
       end
     end
     it_behaves_like 'a route', 'post', '/messages'

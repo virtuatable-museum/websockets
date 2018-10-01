@@ -26,7 +26,9 @@ module Services
     # @param data [Hash] a JSON-compatible hash to send as a JSON string with the message type.
     def send_message(session_id, message, data)
       if !sockets[session_id].nil?
-        sockets[session_id].send({message: message, data: data}.to_json)
+        EM.next_tick do
+          sockets[session_id].send({message: message, data: data}.to_json)
+        end
       end
     end
 
@@ -41,11 +43,44 @@ module Services
     # @param username [String] the nickname of the user you want to send a message to.
     # @param message [String] the type of message you want to send.
     # @param data [Hash] a JSON-compatible hash to send as a JSON string with the message type.
-    def send_to_user(username, message, data)
-      account = Arkaan::Account.where(username: username).first
-      if !account.nil?
-        account.sessions.each { |session| send_message(session.id.to_s, message, data) }
+    def send_to_user(account_id, message, data)
+      account = Arkaan::Account.where(_id: account_id).first
+      account.sessions.each do |session|
+        send_message(session.id.to_s, message, data)
       end
     end
+
+    def send_to_campaign(campaign_id, message, data)
+      campaign = Arkaan::Campaign.where(_id: campaign_id).first
+      campaign.accounts.each do |account|
+        send_to_user(account_id, message, data)
+      end
+    end
+
+    def send_to_accounts(account_ids, message, data)
+      accounts = Arkaan::Account.where(:_id.in => account_ids)
+      accounts.each do |session|
+        send_message(session.id.to_s, message, data)
+      end
+    end
+
+    def check_account(account_id)
+      return true if account_id.nil?
+      return !Arkaan::Account.where(_id: account_id).first.nil?
+    end
+    
+    def check_accounts(account_ids)
+      return true if account_ids.nil?
+      account_ids.each do |account_id|
+        return false if !check_account(account_id)
+      end
+      return true
+    end
+    
+    def check_campaign(campaign_id)
+      return true if campaign_id.nil?
+      return !Arkaan::Campaign.where(_id: campaign_id).first.nil?
+    end
+
   end
 end
