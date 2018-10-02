@@ -12,6 +12,42 @@ describe Controllers::Websockets do
   end
 
   describe 'POST /messages' do
+    describe 'Nominal case' do
+      describe 'with an account' do
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', account_id: account.id.to_s, message: 'test'}
+        end
+        it 'Returns a OK (200) status' do
+          expect(last_response.status).to be 200
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({message: 'transmitted'})
+        end
+      end
+      describe 'with a campaign' do
+        let!(:campaign) { create(:campaign, creator: account) }
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', campaign_id: campaign.id.to_s, message: 'test'}
+        end
+        it 'Returns a OK (200) status' do
+          expect(last_response.status).to be 200
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({message: 'transmitted'})
+        end
+      end
+      describe 'with an array of accounts' do
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', account_ids: [account.id.to_s], message: 'test'}
+        end
+        it 'Returns a OK (200) status' do
+          expect(last_response.status).to be 200
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({message: 'transmitted'})
+        end
+      end
+    end
 
     describe '400 errors' do
       describe 'when the message is not given' do
@@ -112,6 +148,7 @@ describe Controllers::Websockets do
         end
       end
     end
+    
     it_behaves_like 'a route', 'post', '/messages'
   end
 end

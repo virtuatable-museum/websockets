@@ -31,20 +31,12 @@ module Controllers
       # A message can be sent to either : one user, several users, and all the users of a single campaign.
       check_either_presence 'account_id', 'campaign_id', 'account_ids', route: 'messages', key: 'any_id'
 
-      service = Services::Websockets.instance
-
-      if !params['account_id'].nil?
-        custom_error 404, 'messages.account_id.unknown' if !service.check_account(params['account_id'])
-        service.send_to_account(params['account_id'], params['message'], params['data'] || {})
-      elsif !params['account_ids'].nil?
-        custom_error 404, 'messages.account_id.unknown' if !service.check_accounts(params['account_ids'])
-        service.send_to_accounts(params['account_ids'], params['message'], params['data'] || {})
-      elsif !params['campaign_id'].nil?
-        custom_error 404, 'messages.campaign_id.unknown' if !service.check_campaign(params['campaign_id'])
-        service.send_to_campaign(params['campaign_id'], params['message'], params['data'] || {})
+      begin
+        Services::Websockets.instance.forward_message(params)
+        halt 200, {message: 'transmitted'}.to_json
+      rescue Services::Exceptions::ItemNotFound => exception
+        custom_error 404, exception.to_s
       end
-      
-      halt 200, {message: 'transmitted'}.to_json
     end
 
     declare_route 'post', '/broadcast' do
