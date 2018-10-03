@@ -16,7 +16,12 @@ module Services
     # @param session_id [String] the unique identifier of the session to associate the socket to.
     # @param websocket [Object] the websocket object associated to the session.
     def create(session_id, websocket)
-      websocket.onopen { sockets[session_id] = websocket }
+      websocket.onopen {
+        sockets[session_id] = websocket
+        session = Arkaan::Authentication::Session.where(_id: session_id).first
+        instance_id = Arkaan::Utils::MicroService.instance.instance.id.to_s
+        session.update_attribute(:websocket_id, instance_id) if !session.nil?
+      }
       websocket.onclose { sockets.delete(session_id) }
     end
 
