@@ -12,3 +12,6 @@ errors:
       required:
     message:
       require: ''
+    session_id:
+      required:
+      unknown:

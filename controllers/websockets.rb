@@ -22,8 +22,11 @@ module Controllers
     end
 
     declare_route 'post', '/messages' do
+      before_checks
       # The message have to be sent, even if the additional data are optional.
       check_presence 'message', 'session_ids', route: 'messages'
+
+      session = check_session('messages')
 
       Services::Websockets.instance.send_to_sessions(params['session_ids'], params['message'], params['data'] || {})
 

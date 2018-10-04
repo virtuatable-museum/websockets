@@ -16,7 +16,7 @@ describe Controllers::Websockets do
 
     describe 'Nominal case' do
       before do
-        post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s]}
+        post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s], session_id: session.token}
       end
       it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
@@ -29,7 +29,7 @@ describe Controllers::Websockets do
     describe '400 errors' do
       describe 'when the message is not given' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s]}
+          post '/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], session_id: session.token}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
@@ -44,12 +44,10 @@ describe Controllers::Websockets do
       end
       describe 'when the message is given empty' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], message: ''}
+          post '/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], message: '', session_id: session.token}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
-        end
-        it 'Returns the correct body' do
         end
         it 'Returns the correct body' do
           expect(last_response.body).to include_json({
@@ -61,12 +59,10 @@ describe Controllers::Websockets do
       end
       describe 'when the session ids are not given' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test'}
+          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_id: session.token}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
-        end
-        it 'Returns the correct body' do
         end
         it 'Returns the correct body' do
           expect(last_response.body).to include_json({
@@ -76,6 +72,41 @@ describe Controllers::Websockets do
           })
         end
       end
+      describe 'when the session_id is not given' do
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s]}
+        end
+        it 'Returns a OK (200) status' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'session_id',
+            error: 'required'
+          })
+        end
+      end
     end
+
+    describe '404 errors' do
+      describe 'when the session is not found' do
+        before do
+          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s], session_id: 'any_unknown_id'}
+        end
+        it 'Returns a OK (200) status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'session_id',
+            error: 'unknown'
+          })
+        end
+      end
+    end
+
+    it_behaves_like 'a route', 'post', '/messages'
   end
 end
