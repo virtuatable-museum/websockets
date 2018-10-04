@@ -8,13 +8,7 @@ errors:
       required: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-given'
       unknown: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-found'
   messages:
-    account_id:
-      unknown: ''
-    any_id:
-      required: ''
-    campaign_id:
-      unknown: ''
+    session_ids:
+      required:
     message:
       require: ''
-    receiver:
-      required: ''
