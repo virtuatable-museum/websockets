@@ -8,8 +8,11 @@ module Services
     #   @return [Hash<String, Object>] a hash to store the sockets linked to the different sessions.
     attr_accessor :sockets
 
+    attr_accessor :logger
+
     def initialize
       @sockets = {}
+      @logger = Logger.new(STDOUT)
     end
 
     # Associates the given websocket to the given session and binds actions on it.
@@ -30,8 +33,13 @@ module Services
     # @param message [String] the type of message you want to send.
     # @param data [Hash] a JSON-compatible hash to send as a JSON string with the message type.
     def send_to_sessions(session_ids, message, data)
+      logger.info("sessions : #{session_ids.join(',')}")
+      logger.info("message : #{message}")
+      logger.info("data : #{data}")
       session_ids.each do |session_id|
+        logger.info("   session : #{session_id}")
         if !sockets[session_id].nil?
+          logger("   Je l'ai bien trouvé, j'envoie")
           EM.next_tick do
             sockets[session_id].send({message: message, data: data}.to_json)
           end

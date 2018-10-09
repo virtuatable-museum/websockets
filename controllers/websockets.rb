@@ -17,7 +17,6 @@ module Controllers
       custom_error 400, 'creation.websocket.invalid_type' if !request.websocket?
       
       request.websocket do |ws|
-        logger.info("Création du websocket pour la session #{session.id.to_s} pour #{session.account.username}")
         Services::Websockets.instance.create(session.id.to_s, ws)
       end
     end
@@ -29,7 +28,6 @@ module Controllers
 
       session = check_session('messages')
 
-      logger.info("Envoi du message #{params['message']} pour la session #{session.id.to_s} pour #{session.account.username}")
       Services::Websockets.instance.send_to_sessions(params['session_ids'], params['message'], params['data'] || {})
 
       halt 200, {message: 'transmitted'}.to_json
