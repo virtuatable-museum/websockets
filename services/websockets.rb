@@ -39,7 +39,7 @@ module Services
       session_ids.each do |session_id|
         logger.info("   session : #{session_id}")
         if !sockets[session_id].nil?
-          logger("   Je l'ai bien trouvé, j'envoie")
+          logger.info("   Je l'ai bien trouvé, j'envoie")
           EM.next_tick do
             sockets[session_id].send({message: message, data: data}.to_json)
           end
