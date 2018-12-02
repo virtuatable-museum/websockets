@@ -109,4 +109,20 @@ describe Controllers::Websockets do
 
     it_behaves_like 'a route', 'post', '/messages'
   end
+
+  describe 'POST /purge' do
+    describe 'Nominal case' do
+      before do
+        post '/purge', {token: 'test_token', app_key: 'other_key', session_id: session.token}
+      end
+      it 'Returns a OK (200) status' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body' do
+        expect(last_response.body).to include_json({message: 'purged'})
+      end
+    end
+
+    it_behaves_like 'a route', 'post', '/purge'
+  end
 end

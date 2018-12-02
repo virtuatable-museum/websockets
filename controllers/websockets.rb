@@ -21,6 +21,12 @@ module Controllers
       end
     end
 
+    declare_route 'post', '/purge' do
+      before_checks
+      Services::Websockets.instance.purge
+      halt 200, {message: 'purged'}.to_json
+    end
+
     declare_route 'post', '/messages' do
       before_checks
       # The message have to be sent, even if the additional data are optional.
