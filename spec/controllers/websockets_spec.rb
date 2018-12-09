@@ -16,7 +16,7 @@ describe Controllers::Websockets do
 
     describe 'Nominal case' do
       before do
-        post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s], session_id: session.token}
+        post '/websockets/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s], session_id: session.token}
       end
       it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
@@ -29,7 +29,7 @@ describe Controllers::Websockets do
     describe '400 errors' do
       describe 'when the message is not given' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], session_id: session.token}
+          post '/websockets/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], session_id: session.token}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
@@ -44,7 +44,7 @@ describe Controllers::Websockets do
       end
       describe 'when the message is given empty' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], message: '', session_id: session.token}
+          post '/websockets/messages', {token: 'test_token', app_key: 'other_key', session_ids: [session.id.to_s], message: '', session_id: session.token}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
@@ -59,7 +59,7 @@ describe Controllers::Websockets do
       end
       describe 'when the session ids are not given' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_id: session.token}
+          post '/websockets/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_id: session.token}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
@@ -74,7 +74,7 @@ describe Controllers::Websockets do
       end
       describe 'when the session_id is not given' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s]}
+          post '/websockets/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s]}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 400
@@ -92,7 +92,7 @@ describe Controllers::Websockets do
     describe '404 errors' do
       describe 'when the session is not found' do
         before do
-          post '/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s], session_id: 'any_unknown_id'}
+          post '/websockets/messages', {token: 'test_token', app_key: 'other_key', message: 'test', session_ids: [session.id.to_s], session_id: 'any_unknown_id'}
         end
         it 'Returns a OK (200) status' do
           expect(last_response.status).to be 404
@@ -107,13 +107,13 @@ describe Controllers::Websockets do
       end
     end
 
-    it_behaves_like 'a route', 'post', '/messages'
+    it_behaves_like 'a route', 'post', '/websockets/messages'
   end
 
   describe 'POST /purge' do
     describe 'Nominal case' do
       before do
-        post '/purge', {token: 'test_token', app_key: 'other_key', session_id: session.token}
+        post '/websockets/purge', {token: 'test_token', app_key: 'other_key', session_id: session.token}
       end
       it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
@@ -123,6 +123,6 @@ describe Controllers::Websockets do
       end
     end
 
-    it_behaves_like 'a route', 'post', '/purge'
+    it_behaves_like 'a route', 'post', '/websockets/purge'
   end
 end
