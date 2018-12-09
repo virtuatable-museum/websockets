@@ -14,9 +14,13 @@ module Controllers
 
     declare_route 'get', '/' do
       session = check_session 'messages'
+
+      logger.info("La requête est-elle un websocket ? #{request.websocket?}")
+
       custom_error 400, 'creation.websocket.invalid_type' if !request.websocket?
       
       request.websocket do |ws|
+        logger.info("Passage dans le bloc du contrôleur lançant la création du lien de synchronisation")
         Services::Websockets.instance.create(session.id.to_s, ws)
       end
     end

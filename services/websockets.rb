@@ -20,6 +20,7 @@ module Services
     # @param websocket [Object] the websocket object associated to the session.
     def create(session_id, websocket)
       session = Arkaan::Authentication::Session.where(_id: session_id).first
+      logger.info("Entrée dans la méthode de création du canal de communication")
       websocket.onopen {
         @sockets[session_id] = websocket
         instance_id = Arkaan::Utils::MicroService.instance.instance.id.to_s
