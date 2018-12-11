@@ -4,7 +4,6 @@ module Controllers
   # Controller handling the websockets, creating it and receiving the commands for it.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Websockets < Arkaan::Utils::ControllerWithoutFilter
-    helpers Sinatra::CustomLogger
 
     load_errors_from __FILE__
 
