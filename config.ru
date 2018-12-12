@@ -8,7 +8,7 @@ service = Arkaan::Utils::MicroService.instance
   .from_location(__FILE__)
   .in_standard_mode
 
-use Controllers::Repartitor
-run Controllers::Websockets
+use Controllers::Websockets
+run Controllers::Repartitor
 
 at_exit { Arkaan::Utils::MicroService.instance.deactivate! }

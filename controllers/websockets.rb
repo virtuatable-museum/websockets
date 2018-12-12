@@ -7,10 +7,6 @@ module Controllers
 
     load_errors_from __FILE__
 
-    configure do
-      set :logger, Logger.new(STDOUT)
-    end
-
     declare_route 'get', '/' do
       session = check_session 'messages'
 
