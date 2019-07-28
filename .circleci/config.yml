@@ -28,7 +28,7 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
-  deploy-job:
+  deploy-job-1:
     docker:
        - image: circleci/ruby:2.6.2-node-browsers
        - image: mongo:3.6.12-xenial
@@ -43,13 +43,35 @@ jobs:
           command: bundle check || bundle install
       - run:
           name: Deploy to production environment
-          command: bundle exec cap production deploy
+          command: bundle exec cap production_1 deploy
+  deploy-job-2:
+    docker:
+       - image: circleci/ruby:2.6.2-node-browsers
+       - image: mongo:3.6.12-xenial
+    working_directory: ~/repo
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "fa:fe:e6:76:13:de:d6:1b:cc:5a:3d:42:3f:60:17:01"
+      - checkout
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+      - run:
+          name: Deploy to production environment
+          command: bundle exec cap production_2 deploy
 workflows:
   version: 2
   build-deploy:
     jobs:
       - test-job
-      - deploy-job:
+      - deploy-job-1:
+          requires:
+            - test-job
+          filters:
+            branches:
+              only: master
+      - deploy-job-2:
           requires:
             - test-job
           filters:
