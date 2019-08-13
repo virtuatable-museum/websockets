@@ -28,4 +28,5 @@ group :development, :test do
   gem 'rspec-json_expectations', '2.1.0'
   gem 'rubocop'
   gem 'faker'
+  gem 'yard'                   , '0.9.20'
 end
