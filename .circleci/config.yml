@@ -26,11 +26,18 @@ jobs:
     steps:
       - virtuacommands/perform-rubocop-analysis:
           directories: 'controllers/'
-  deploy-job:
+  deploy-job-1:
     executor: virtuaexecutors/mongoruby_2-6-3
     steps:
       - virtuacommands/perform-capistrano-command:
           command: "deploy"
+          stage: production_1
+  deploy-job-2:
+    executor: virtuaexecutors/mongoruby_2-6-3
+    steps:
+      - virtuacommands/perform-capistrano-command:
+          command: "deploy"
+          stage: production_2
   restart-job:
     executor: virtuaexecutors/mongoruby_2-6-3
     steps:
@@ -51,7 +58,14 @@ workflows:
       - doc-job:
           requires:
             - rubocop-job
-      - deploy-job:
+      - deploy-job-1:
+          requires:
+            - test-repartitor-job
+            - test-websockets-job
+          filters:
+            branches:
+              only: master
+      - deploy-job-2:
           requires:
             - test-repartitor-job
             - test-websockets-job
