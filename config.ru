@@ -1,6 +1,8 @@
 require 'bundler'
 Bundler.require(ENV['RACK_ENV'].to_sym || :development)
 
+require 'sinatra/custom_logger'
+
 $stdout.sync = true
 
 service = Arkaan::Utils::MicroService.instance
