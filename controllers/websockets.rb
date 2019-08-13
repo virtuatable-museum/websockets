@@ -3,7 +3,7 @@ require 'sinatra/custom_logger'
 module Controllers
   # Controller handling the websockets, creating it and receiving the commands for it.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
-  class Websockets < Arkaan::Utils::ControllerWithoutFilter
+  class Websockets < Arkaan::Utils::Controllers::Base
 
     load_errors_from __FILE__
 
