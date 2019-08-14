@@ -38,11 +38,18 @@ jobs:
       - virtuacommands/perform-capistrano-command:
           command: "deploy"
           stage: production_2
-  restart-job:
+  restart-job_1:
     executor: virtuaexecutors/mongoruby_2-6-3
     steps:
       - virtuacommands/perform-capistrano-command:
           command: "deploy:start"
+          stage: production_1
+  restart-job_2:
+    executor: virtuaexecutors/mongoruby_2-6-3
+    steps:
+      - virtuacommands/perform-capistrano-command:
+          command: "deploy:start"
+          stage: production_2
 
 workflows:
   version: 2.1
@@ -81,4 +88,5 @@ workflows:
               only:
                 - master
     jobs:
-      - restart-job
+      - restart-job_1
+      - restart-job_2
