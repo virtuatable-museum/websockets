@@ -76,7 +76,7 @@ GEM
     erubi (1.8.0)
     erubis (2.7.0)
     eventmachine (1.2.7)
-    excon (0.66.0)
+    excon (0.71.0)
     factory_girl (4.8.1)
       activesupport (>= 3.0.0)
     faker (2.1.2)
